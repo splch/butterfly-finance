@@ -1,58 +1,59 @@
 # Butterfly Finance
 
-This Flutter app is designed to help users manage their personal finances by linking their bank accounts through Plaid, tracking transactions, analyzing spending, managing category budgets, and tracking net worth over time.
+Butterfly Finance is a personal finance application designed to help users manage their finances more efficiently. Developed with Flutter and leveraging Plaid for secure financial data integration, Butterfly Finance offers a range of features including bank account linking, transaction history, spending analysis, category-based budgeting, and net worth tracking — all within a standalone, user-friendly environment.
 
 ## Features
 
-- **Account Linking:** Securely link bank accounts using Plaid.
-- **Transaction History:** View and manage transaction records.
-- **Spending Analysis:** Analyze spending patterns with visual charts.
-- **Category Budgets:** Set and manage budgets for different spending categories.
-- **Net Worth Tracking:** Calculate and visualize net worth over time.
+- **Bank Account Linking**: Securely link your bank accounts using Plaid.
+- **Transaction History**: View all your financial transactions in one place.
+- **Spending Analysis**: Analyze your spending patterns to make informed financial decisions.
+- **Budgeting**: Set and manage budgets by category to stay on track with your financial goals.
+- **Net Worth Tracking**: Keep track of your net worth over time.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Flutter installed on your development machine (https://flutter.dev/docs/get-started/install).
-- A Plaid account and access keys (https://dashboard.plaid.com/signup).
+- Flutter (latest version)
+- Dart (latest version)
+- An IDE (Visual Studio Code, Android Studio, etc.)
 
 ### Installation
 
 1. Clone the repository:
-   ```
-   git clone https://github.com/splch/butterfly-finance.git
-   ```
+
+```bash
+git clone https://github.com/splch/butterfly_finance.git
+```
+
 2. Navigate to the project directory:
-   ```
-   cd butterfly-finance
-   ```
+
+```bash
+cd butterfly_finance
+```
+
 3. Install dependencies:
-   ```
-   flutter pub get
-   ```
-4. Create a `.env` file in the root of your project and add your Plaid API keys:
-   ```
-   PLAID_CLIENT_ID=your_client_id_here
-   PLAID_SECRET=your_secret_here
-   ```
-5. Run the app:
-   ```
-   flutter run
-   ```
 
-## Usage
+```bash
+flutter pub get
+```
 
-After launching the app, follow the on-screen instructions to link your bank accounts through Plaid. Once your accounts are linked, you can view transaction histories, analyze your spending, manage budgets, and track your net worth directly from the app.
+4. Run the app:
 
-## Contributing
+```bash
+flutter run
+```
 
-Contributions are welcome! Please feel free to submit a pull request or open an issue if you have suggestions or find a bug.
+## Development
+
+This project is developed using the following technology stack:
+
+- **Flutter**: For creating a cross-platform mobile application.
+- **Plaid**: For secure bank account linking and financial data aggregation.
+- **Hive**: For local database storage.
+- **fl_chart**: For generating charts and graphs.
+- **ml_algo**: For machine learning predictions.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
-
-## Disclaimer
-
-This app is a demonstration and should be used as such. Please review the Plaid privacy policy and terms of use before linking personal bank accounts.
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
