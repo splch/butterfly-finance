@@ -1,15 +1,13 @@
-class NetWorth {
-  String recordId;
-  DateTime date;
-  double totalAssets;
-  double totalLiabilities;
-  double netWorth;
+import 'package:isar/isar.dart';
 
-  NetWorth({
-    required this.recordId,
-    required this.date,
-    required this.totalAssets,
-    required this.totalLiabilities,
-    required this.netWorth,
-  });
+part 'net_worth.g.dart';
+
+@Collection()
+class NetWorth {
+  Id id = Isar.autoIncrement;
+
+  late DateTime date;
+  late double totalAssets;
+  late double totalLiabilities;
+  late double netWorth;
 }

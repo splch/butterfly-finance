@@ -12,7 +12,7 @@ class NetWorthViewModel with ChangeNotifier {
 
   Future<void> loadNetWorthRecords() async {
     try {
-      _netWorthRecords = databaseService.getAllNetWorths();
+      _netWorthRecords = await databaseService.getAllNetWorthRecords();
       notifyListeners(); // Notify listening widgets to rebuild with the new data
     } catch (e) {
       // Error handling: Log, set error state, show messages to users, etc.

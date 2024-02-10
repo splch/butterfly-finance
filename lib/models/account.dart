@@ -1,13 +1,13 @@
-class Account {
-  String accountId;
-  String accountName;
-  String accountType;
-  double balance;
+import 'package:isar/isar.dart';
 
-  Account({
-    required this.accountId,
-    required this.accountName,
-    required this.accountType,
-    required this.balance,
-  });
+part 'account.g.dart';
+
+@Collection()
+class Account {
+  Id id = Isar.autoIncrement;
+
+  late String accountId;
+  late String accountName;
+  late String accountType;
+  late double balance;
 }

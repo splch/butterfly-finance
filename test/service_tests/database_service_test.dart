@@ -1,27 +1,51 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:butterfly_finance/models/account.dart';
 import 'package:butterfly_finance/services/database_service.dart';
-import 'package:butterfly_finance/models/budget.dart';
-
-class MockDatabaseService extends Mock implements DatabaseService {}
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
-  group('Database Service Tests', () {
-    final databaseService = MockDatabaseService();
-    final budget =
-        Budget(budgetId: '1', categoryId: 'groceries', amount: 500.0);
+  group('DatabaseService Test', () {
+    late DatabaseService databaseService;
+    late Isar isar;
 
-    test('Should save and fetch budget data successfully', () async {
-      when(databaseService.addBudget(budget))
-          .thenAnswer((_) async => '1'); // Assuming insert returns the ID
-      when(databaseService.getBudget('1')).thenAnswer(budget);
+    setUp(() async {
+      // Initialize Isar for testing
+      final dir = await getTemporaryDirectory();
+      isar = await Isar.open(
+        [AccountSchema],
+        directory: dir.path,
+        name: 'test',
+      );
 
-      databaseService.addBudget(budget);
-      final fetchedBudget = databaseService.getBudget('1');
-
-      expect(fetchedBudget, isNotNull);
-      expect(fetchedBudget?.budgetId, budget.budgetId);
-      expect(fetchedBudget?.amount, budget.amount);
+      databaseService = DatabaseService();
+      // Override the isar instance in your service with the test instance
+      databaseService.isar = isar;
     });
+
+    tearDown(() async {
+      // Close the Isar instance and delete the database after each test
+      await isar.close();
+    });
+
+    test('Add and Retrieve Account', () async {
+      final account = Account()
+        ..accountId = '12345'
+        ..accountName = 'Test Account'
+        ..accountType = 'checking'
+        ..balance = 1000.0;
+
+      await databaseService.addAccount(account);
+
+      final accounts = await databaseService.getAllAccounts();
+      expect(accounts.isNotEmpty, true);
+      final retrievedAccount = accounts.first;
+      expect(retrievedAccount.accountId, '12345');
+      expect(retrievedAccount.accountName, 'Test Account');
+      expect(retrievedAccount.accountType, 'checking');
+      expect(retrievedAccount.balance, 1000.0);
+    });
+
+    // Additional tests for update, delete operations, and other models can follow a similar structure
   });
 }

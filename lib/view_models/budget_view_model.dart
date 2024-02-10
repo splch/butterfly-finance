@@ -12,7 +12,7 @@ class BudgetViewModel with ChangeNotifier {
 
   Future<void> loadBudgets() async {
     try {
-      _budgets = databaseService.getAllBudgets();
+      _budgets = await databaseService.getAllBudgets();
       notifyListeners(); // Notify any listening widgets to rebuild
     } catch (e) {
       // Ideally, handle errors more gracefully in a real app

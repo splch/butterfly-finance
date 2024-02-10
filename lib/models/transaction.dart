@@ -1,17 +1,15 @@
-class Transaction {
-  String transactionId;
-  String accountId;
-  DateTime date;
-  double amount;
-  String category;
-  String description;
+import 'package:isar/isar.dart';
 
-  Transaction({
-    required this.transactionId,
-    required this.accountId,
-    required this.date,
-    required this.amount,
-    required this.category,
-    required this.description,
-  });
+part 'transaction.g.dart';
+
+@Collection()
+class Transaction {
+  Id id = Isar.autoIncrement;
+
+  late String transactionId;
+  late String accountId;
+  late DateTime date;
+  late double amount;
+  late String category;
+  late String description;
 }

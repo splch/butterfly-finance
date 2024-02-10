@@ -1,11 +1,12 @@
-class Budget {
-  String budgetId;
-  String categoryId;
-  double amount;
+import 'package:isar/isar.dart';
 
-  Budget({
-    required this.budgetId,
-    required this.categoryId,
-    required this.amount,
-  });
+part 'budget.g.dart';
+
+@Collection()
+class Budget {
+  Id id = Isar.autoIncrement;
+
+  late String budgetId;
+  late String categoryId;
+  late double amount;
 }

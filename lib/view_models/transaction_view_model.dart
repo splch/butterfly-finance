@@ -12,7 +12,7 @@ class TransactionViewModel with ChangeNotifier {
 
   Future<void> loadTransactions() async {
     try {
-      _transactions = databaseService.getAllTransactions();
+      _transactions = await databaseService.getAllTransactions();
       notifyListeners(); // Notify listening widgets to rebuild with the new data
     } catch (e) {
       // Error handling: Log, set error state, show messages to users, etc.
