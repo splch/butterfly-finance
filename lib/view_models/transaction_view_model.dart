@@ -1,25 +1,28 @@
 import 'package:flutter/foundation.dart';
-import 'package:butterfly_finance/services/database_service.dart';
 import 'package:butterfly_finance/models/transaction.dart';
+import 'package:butterfly_finance/services/database_service.dart';
 
 class TransactionViewModel with ChangeNotifier {
-  final DatabaseService databaseService;
-  List<Transaction?> _transactions = [];
+  final DatabaseService _databaseService;
 
-  List<Transaction?> get transactions => _transactions;
+  TransactionViewModel(this._databaseService);
 
-  TransactionViewModel({required this.databaseService});
-
-  Future<void> loadTransactions() async {
-    try {
-      _transactions = await databaseService.getAllTransactions();
-      notifyListeners(); // Notify listening widgets to rebuild with the new data
-    } catch (e) {
-      // Error handling: Log, set error state, show messages to users, etc.
-      print('Error loading transactions: $e');
-    }
+  Future<void> addTransaction(Transaction transaction) async {
+    await _databaseService.addTransaction(transaction);
+    notifyListeners();
   }
 
-  // Here you can add functionality to add, update, or delete transactions,
-  // and possibly to filter or sort the list of transactions.
+  Future<List<Transaction>> getAllTransactions() async {
+    return _databaseService.getAllTransactions();
+  }
+
+  Future<void> updateTransaction(Transaction transaction) async {
+    await _databaseService.updateTransaction(transaction);
+    notifyListeners();
+  }
+
+  Future<void> deleteTransaction(int id) async {
+    await _databaseService.deleteTransaction(id);
+    notifyListeners();
+  }
 }

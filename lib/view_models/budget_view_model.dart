@@ -1,24 +1,28 @@
 import 'package:flutter/foundation.dart';
-import 'package:butterfly_finance/services/database_service.dart';
 import 'package:butterfly_finance/models/budget.dart';
+import 'package:butterfly_finance/services/database_service.dart';
 
 class BudgetViewModel with ChangeNotifier {
-  final DatabaseService databaseService;
-  List<Budget?> _budgets = [];
+  final DatabaseService _databaseService;
 
-  List<Budget?> get budgets => _budgets;
+  BudgetViewModel(this._databaseService);
 
-  BudgetViewModel({required this.databaseService});
-
-  Future<void> loadBudgets() async {
-    try {
-      _budgets = await databaseService.getAllBudgets();
-      notifyListeners(); // Notify any listening widgets to rebuild
-    } catch (e) {
-      // Ideally, handle errors more gracefully in a real app
-      print('Error loading budgets: $e');
-    }
+  Future<void> addBudget(Budget budget) async {
+    await _databaseService.addBudget(budget);
+    notifyListeners();
   }
 
-  // Additional functionality to add, update, or remove budgets can be implemented here
+  Future<List<Budget>> getAllBudgets() async {
+    return _databaseService.getAllBudgets();
+  }
+
+  Future<void> updateBudget(Budget budget) async {
+    await _databaseService.updateBudget(budget);
+    notifyListeners();
+  }
+
+  Future<void> deleteBudget(int id) async {
+    await _databaseService.deleteBudget(id);
+    notifyListeners();
+  }
 }

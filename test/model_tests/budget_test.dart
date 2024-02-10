@@ -3,16 +3,16 @@ import 'package:butterfly_finance/models/budget.dart';
 
 void main() {
   group('Budget Model Tests', () {
-    final budget =
-        Budget(budgetId: '1', categoryId: 'groceries', amount: 500.0);
+    test('should correctly initialize a Budget object', () {
+      final budget = Budget()
+        ..budgetId = 'B123'
+        ..categoryId = 'C456'
+        ..amount = 500.0;
 
-    test('Should correctly initialize a Budget object', () {
-      expect(budget.budgetId, '1');
-      expect(budget.categoryId, 'groceries');
+      // Verify the fields are correctly assigned
+      expect(budget.budgetId, 'B123');
+      expect(budget.categoryId, 'C456');
       expect(budget.amount, 500.0);
     });
-
-    // Add more tests for serialization if your model supports it
-    // and any other model-specific logic you have implemented.
   });
 }

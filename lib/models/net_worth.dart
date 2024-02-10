@@ -9,5 +9,6 @@ class NetWorth {
   late DateTime date;
   late double totalAssets;
   late double totalLiabilities;
-  late double netWorth;
+
+  double get netWorth => totalAssets - totalLiabilities;
 }

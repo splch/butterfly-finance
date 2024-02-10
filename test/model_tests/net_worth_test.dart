@@ -2,22 +2,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:butterfly_finance/models/net_worth.dart';
 
 void main() {
-  group('Net Worth Model Tests', () {
-    final netWorthRecord = NetWorth(
-      recordId: '1',
-      date: DateTime.now(),
-      totalAssets: 10000.0,
-      totalLiabilities: 5000.0,
-      netWorth: 5000.0,
-    );
+  group('NetWorth Model Tests', () {
+    test('should correctly initialize a NetWorth object', () {
+      final netWorth = NetWorth()
+        ..date = DateTime(2022, 1, 1)
+        ..totalAssets = 2000.0
+        ..totalLiabilities = 500.0;
 
-    test('Should correctly initialize a NetWorth object', () {
-      expect(netWorthRecord.recordId, '1');
-      expect(netWorthRecord.totalAssets, 10000.0);
-      expect(netWorthRecord.totalLiabilities, 5000.0);
-      expect(netWorthRecord.netWorth, 5000.0);
+      // Verify the fields are correctly assigned
+      expect(netWorth.date, DateTime(2022, 1, 1));
+      expect(netWorth.totalAssets, 2000.0);
+      expect(netWorth.totalLiabilities, 500.0);
     });
 
-    // Add more tests for any additional logic or methods within the NetWorth model.
+    test('should correctly calculate net worth', () {
+      final netWorth = NetWorth()
+        ..totalAssets = 2000.0
+        ..totalLiabilities = 500.0;
+
+      // Verify net worth calculation
+      expect(netWorth.netWorth, 1500.0);
+    });
   });
 }

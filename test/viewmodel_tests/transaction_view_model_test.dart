@@ -1,36 +1,51 @@
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:butterfly_finance/view_models/transaction_view_model.dart';
-import 'package:butterfly_finance/models/transaction.dart';
+import 'package:isar/isar.dart';
 import 'package:butterfly_finance/services/database_service.dart';
-
-class MockDatabaseService extends Mock implements DatabaseService {}
+import 'package:butterfly_finance/models/transaction.dart';
+import 'package:butterfly_finance/view_models/transaction_view_model.dart';
 
 void main() {
-  group('Transaction ViewModel Tests', () {
-    final databaseService = MockDatabaseService();
-    final viewModel = TransactionViewModel(databaseService: databaseService);
-    final transactions = [
-      Transaction(
-        transactionId: '1',
-        accountId: '1',
-        date: DateTime.now(),
-        amount: -50.0,
-        category: 'Groceries',
-        description: 'Grocery shopping',
-      ),
-    ];
+  late DatabaseService databaseService;
+  late Isar isar;
 
-    test('Should load transactions successfully', () async {
-      when(databaseService.getAllTransactions())
-          .thenAnswer((_) async => transactions);
+  setUpAll(() async {
+    final directory = Directory.systemTemp.createTempSync();
 
-      await viewModel.loadTransactions();
-      expect(viewModel.transactions.isNotEmpty, true);
-      expect(viewModel.transactions.first.amount, -50.0);
+    isar = await Isar.open(
+      [TransactionSchema],
+      directory: directory.path,
+    );
+
+    // Initialize the database service with the mock Isar instance
+    databaseService = DatabaseService();
+    databaseService.isar = isar;
+  });
+
+  tearDownAll(() async {
+    await isar.close(deleteFromDisk: true);
+  });
+  group('TransactionViewModel Tests', () {
+    late TransactionViewModel transactionViewModel;
+
+    setUp(() {
+      // Initialize the TransactionViewModel with the DatabaseService
+      transactionViewModel = TransactionViewModel(databaseService);
     });
 
-    // Consider adding more tests to cover scenarios like transaction categorization,
-    // filtering by date or amount, and handling empty or error states.
+    test('Add and Retrieve Transaction', () async {
+      final testTransaction = Transaction()
+        ..transactionId = 'tx123'
+        ..accountId = 'acc123'
+        ..date = DateTime.now()
+        ..amount = -50.0
+        ..category = 'Dining'
+        ..description = 'Dinner at restaurant';
+
+      await transactionViewModel.addTransaction(testTransaction);
+      final transactions = await transactionViewModel.getAllTransactions();
+      expect(transactions.isNotEmpty, true);
+      expect(transactions.first.description, equals('Dinner at restaurant'));
+    });
   });
 }

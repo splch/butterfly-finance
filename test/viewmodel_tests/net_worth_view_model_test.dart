@@ -1,37 +1,48 @@
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:butterfly_finance/view_models/net_worth_view_model.dart';
+import 'package:isar/isar.dart';
 import 'package:butterfly_finance/services/database_service.dart';
 import 'package:butterfly_finance/models/net_worth.dart';
-
-class MockDatabaseService extends Mock implements DatabaseService {}
+import 'package:butterfly_finance/view_models/net_worth_view_model.dart';
 
 void main() {
-  group('Net Worth ViewModel Tests', () {
-    final databaseService = MockDatabaseService();
-    final viewModel = NetWorthViewModel(databaseService: databaseService);
-    final netWorthRecords = [
-      NetWorth(
-        recordId: '1',
-        date: DateTime.now(),
-        totalAssets: 20000.0,
-        totalLiabilities: 5000.0,
-        netWorth: 15000.0,
-      ),
-    ];
+  late DatabaseService databaseService;
+  late Isar isar;
+
+  setUpAll(() async {
+    final directory = Directory.systemTemp.createTempSync();
+
+    isar = await Isar.open(
+      [NetWorthSchema],
+      directory: directory.path,
+    );
+
+    // Initialize the database service with the mock Isar instance
+    databaseService = DatabaseService();
+    databaseService.isar = isar;
+  });
+
+  tearDownAll(() async {
+    await isar.close(deleteFromDisk: true);
+  });
+  group('NetWorthViewModel Tests', () {
+    late NetWorthViewModel netWorthViewModel;
 
     setUp(() {
-      when(databaseService.getAllNetWorthRecords())
-          .thenAnswer((_) async => netWorthRecords);
+      // Initialize the NetWorthViewModel with the DatabaseService
+      netWorthViewModel = NetWorthViewModel(databaseService);
     });
 
-    test('Should load net worth records successfully', () async {
-      await viewModel.loadNetWorthRecords();
-      expect(viewModel.netWorthRecords.isNotEmpty, true);
-      expect(viewModel.netWorthRecords.first.netWorth, 15000.0);
-    });
+    test('Add and Retrieve Net Worth', () async {
+      final testNetWorth = NetWorth()
+        ..date = DateTime.now()
+        ..totalAssets = 10000.0
+        ..totalLiabilities = 5000.0;
 
-    // Add more tests to cover scenarios like updating net worth records,
-    // handling empty states, and error handling.
+      await netWorthViewModel.addNetWorth(testNetWorth);
+      final netWorthRecords = await netWorthViewModel.getAllNetWorthRecords();
+      expect(netWorthRecords.isNotEmpty, true);
+      expect(netWorthRecords.first.netWorth, equals(5000.0));
+    });
   });
 }
