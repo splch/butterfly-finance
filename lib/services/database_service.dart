@@ -1,120 +1,115 @@
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:butterfly_finance/models/account.dart';
+import 'package:butterfly_finance/models/transaction.dart';
 import 'package:butterfly_finance/models/budget.dart';
 import 'package:butterfly_finance/models/net_worth.dart';
-import 'package:butterfly_finance/models/transaction.dart';
 
 class DatabaseService {
-  late Box<Account> _accountBox;
-  late Box<Budget> _budgetBox;
-  late Box<NetWorth> _netWorthBox;
-  late Box<Transaction> _transactionBox;
+  late Box<Account> accounts;
+  late Box<Transaction> transactions;
+  late Box<Budget> budgets;
+  late Box<NetWorth> netWorths;
 
-  DatabaseService() {
-    _initialize();
+  Future<void> initHive() async {
+    final dir = await getApplicationDocumentsDirectory();
+    Hive.defaultDirectory = dir.path;
+
+    accounts = Hive.box<Account>(name: 'accounts');
+    transactions = Hive.box<Transaction>(name: 'transactions');
+    budgets = Hive.box<Budget>(name: 'budgets');
+    netWorths = Hive.box<NetWorth>(name: 'netWorths');
   }
 
-  Future<void> _initialize() async {
-    // Assuming adapters are registered elsewhere or before this method is called
-    _accountBox = await Hive.openBox<Account>('accounts');
-    _budgetBox = await Hive.openBox<Budget>('budgets');
-    _netWorthBox = await Hive.openBox<NetWorth>('netWorths');
-    _transactionBox = await Hive.openBox<Transaction>('transactions');
+  // CRUD operations for Account
+  void addAccount(Account account) async {
+    return accounts.add(account);
   }
 
-  // Account CRUD Operations
-  Future<String> insertAccount(Account account) async {
-    await _accountBox.put(account.accountId, account);
-    return account.accountId;
+  Account? getAccount(String key) {
+    return accounts.get(key);
   }
 
-  Future<Account?> getAccount(String accountId) async {
-    return _accountBox.get(accountId);
+  List<Account?> getAllAccounts() {
+    return accounts.getRange(0, accounts.length);
   }
 
-  Future<void> updateAccount(Account account) async {
-    await _accountBox.put(account.accountId, account);
+  void updateAccount(String key, Account updatedAccount) {
+    return accounts.put(key, updatedAccount);
   }
 
-  Future<void> deleteAccount(String accountId) async {
-    await _accountBox.delete(accountId);
+  void deleteAccount(String key) {
+    accounts.delete(key);
   }
 
-  // Budget CRUD Operations
-  Future<String> insertBudget(Budget budget) async {
-    await _budgetBox.put(budget.budgetId, budget);
-    return budget.budgetId;
+  // CRUD operations for Transaction
+  void addTransaction(Transaction transaction) async {
+    return transactions.add(transaction);
   }
 
-  Future<Budget?> getBudget(String budgetId) async {
-    return _budgetBox.get(budgetId);
+  Transaction? getTransaction(String key) {
+    return transactions.get(key);
   }
 
-  Future<void> updateBudget(Budget budget) async {
-    await _budgetBox.put(budget.budgetId, budget);
+  List<Transaction?> getAllTransactions() {
+    return transactions.getRange(0, transactions.length);
   }
 
-  Future<void> deleteBudget(String budgetId) async {
-    await _budgetBox.delete(budgetId);
+  void updateTransaction(String key, Transaction updatedTransaction) {
+    return transactions.put(key, updatedTransaction);
   }
 
-  // Net Worth CRUD Operations
-  Future<String> insertNetWorth(NetWorth netWorth) async {
-    await _netWorthBox.put(netWorth.recordId, netWorth);
-    return netWorth.recordId;
+  void deleteTransaction(String key) {
+    transactions.delete(key);
   }
 
-  Future<NetWorth?> getNetWorth(String recordId) async {
-    return _netWorthBox.get(recordId);
+  // CRUD operations for Budget
+  void addBudget(Budget budget) async {
+    return budgets.add(budget);
   }
 
-  Future<void> updateNetWorth(NetWorth netWorth) async {
-    await _netWorthBox.put(netWorth.recordId, netWorth);
+  Budget? getBudget(String key) {
+    return budgets.get(key);
   }
 
-  Future<void> deleteNetWorth(String recordId) async {
-    await _netWorthBox.delete(recordId);
+  List<Budget?> getAllBudgets() {
+    return budgets.getRange(0, budgets.length);
   }
 
-  // Transaction CRUD Operations
-  Future<String> insertTransaction(Transaction transaction) async {
-    await _transactionBox.put(transaction.transactionId, transaction);
-    return transaction.transactionId;
+  void updateBudget(String key, Budget updatedBudget) {
+    return budgets.put(key, updatedBudget);
   }
 
-  Future<Transaction?> getTransaction(String transactionId) async {
-    return _transactionBox.get(transactionId);
+  void deleteBudget(String key) {
+    budgets.delete(key);
   }
 
-  Future<void> updateTransaction(Transaction transaction) async {
-    await _transactionBox.put(transaction.transactionId, transaction);
+  // CRUD operations for NetWorth
+  void addNetWorth(NetWorth netWorth) async {
+    return netWorths.add(netWorth);
   }
 
-  Future<void> deleteTransaction(String transactionId) async {
-    await _transactionBox.delete(transactionId);
+  NetWorth? getNetWorth(String key) {
+    return netWorths.get(key);
   }
 
-  // Fetch all Accounts
-  Future<List<Account>> getAllAccounts() async {
-    final accounts = _accountBox.values.toList();
-    return accounts;
+  List<NetWorth?> getAllNetWorths() {
+    return netWorths.getRange(0, netWorths.length);
   }
 
-  // Fetch all Budgets
-  Future<List<Budget>> getAllBudgets() async {
-    final budgets = _budgetBox.values.toList();
-    return budgets;
+  void updateNetWorth(String key, NetWorth updatedNetWorth) {
+    return netWorths.put(key, updatedNetWorth);
   }
 
-  // Fetch all Net Worth Records
-  Future<List<NetWorth>> getAllNetWorthRecords() async {
-    final netWorthRecords = _netWorthBox.values.toList();
-    return netWorthRecords;
+  void deleteNetWorth(String key) {
+    netWorths.delete(key);
   }
 
-  // Fetch all Transactions
-  Future<List<Transaction>> getAllTransactions() async {
-    final transactions = _transactionBox.values.toList();
-    return transactions;
+  // Don't forget to close boxes when they are no longer needed
+  void closeBoxes() {
+    accounts.close();
+    transactions.close();
+    budgets.close();
+    netWorths.close();
   }
 }

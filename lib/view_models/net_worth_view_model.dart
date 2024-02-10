@@ -4,15 +4,15 @@ import 'package:butterfly_finance/models/net_worth.dart';
 
 class NetWorthViewModel with ChangeNotifier {
   final DatabaseService databaseService;
-  List<NetWorth> _netWorthRecords = [];
+  List<NetWorth?> _netWorthRecords = [];
 
-  List<NetWorth> get netWorthRecords => _netWorthRecords;
+  List<NetWorth?> get netWorthRecords => _netWorthRecords;
 
   NetWorthViewModel({required this.databaseService});
 
   Future<void> loadNetWorthRecords() async {
     try {
-      _netWorthRecords = await databaseService.getAllNetWorthRecords();
+      _netWorthRecords = databaseService.getAllNetWorths();
       notifyListeners(); // Notify listening widgets to rebuild with the new data
     } catch (e) {
       // Error handling: Log, set error state, show messages to users, etc.

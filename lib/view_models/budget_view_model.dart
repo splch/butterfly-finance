@@ -4,15 +4,15 @@ import 'package:butterfly_finance/models/budget.dart';
 
 class BudgetViewModel with ChangeNotifier {
   final DatabaseService databaseService;
-  List<Budget> _budgets = [];
+  List<Budget?> _budgets = [];
 
-  List<Budget> get budgets => _budgets;
+  List<Budget?> get budgets => _budgets;
 
   BudgetViewModel({required this.databaseService});
 
   Future<void> loadBudgets() async {
     try {
-      _budgets = await databaseService.getAllBudgets();
+      _budgets = databaseService.getAllBudgets();
       notifyListeners(); // Notify any listening widgets to rebuild
     } catch (e) {
       // Ideally, handle errors more gracefully in a real app

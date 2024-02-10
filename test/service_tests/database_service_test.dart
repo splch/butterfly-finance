@@ -12,16 +12,16 @@ void main() {
         Budget(budgetId: '1', categoryId: 'groceries', amount: 500.0);
 
     test('Should save and fetch budget data successfully', () async {
-      when(databaseService.insertBudget(budget))
+      when(databaseService.addBudget(budget))
           .thenAnswer((_) async => '1'); // Assuming insert returns the ID
-      when(databaseService.getBudget('1')).thenAnswer((_) async => budget);
+      when(databaseService.getBudget('1')).thenAnswer(budget);
 
-      await databaseService.insertBudget(budget);
-      final fetchedBudget = await databaseService.getBudget('1');
+      databaseService.addBudget(budget);
+      final fetchedBudget = databaseService.getBudget('1');
 
       expect(fetchedBudget, isNotNull);
-      expect(fetchedBudget.budgetId, budget.budgetId);
-      expect(fetchedBudget.amount, budget.amount);
+      expect(fetchedBudget?.budgetId, budget.budgetId);
+      expect(fetchedBudget?.amount, budget.amount);
     });
   });
 }
