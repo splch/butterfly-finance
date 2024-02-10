@@ -9,7 +9,7 @@ void main() {
   late DatabaseService databaseService;
   late Isar isar;
 
-  setUpAll(() async {
+  setUp(() async {
     final directory = Directory.systemTemp.createTempSync();
 
     isar = await Isar.open(
@@ -22,7 +22,7 @@ void main() {
     databaseService.isar = isar;
   });
 
-  tearDownAll(() async {
+  tearDown(() async {
     await isar.close(deleteFromDisk: true);
   });
 
