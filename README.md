@@ -38,9 +38,16 @@ cd butterfly_finance
 flutter pub get
 ```
 
-4. Run the app:
+4. Build the project:
 
 ```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+5. Run the app (optional, run tests first):
+
+```bash
+flutter test
 flutter run
 ```
 
@@ -50,7 +57,7 @@ This project is developed using the following technology stack:
 
 - **Flutter**: For creating a cross-platform mobile application.
 - **Plaid**: For secure bank account linking and financial data aggregation.
-- **Hive**: For local database storage.
+- **Isar**: For local database storage.
 - **fl_chart**: For generating charts and graphs.
 - **ml_algo**: For machine learning predictions.
 
