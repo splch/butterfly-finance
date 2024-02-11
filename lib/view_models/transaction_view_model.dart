@@ -16,6 +16,14 @@ class TransactionViewModel with ChangeNotifier {
     return _databaseService.getAllTransactions();
   }
 
+  Future<List<Transaction>> getMonthlyTransactions() async {
+    final date = DateTime.now();
+    return _databaseService.getTransactionsBetweenDates(
+      DateTime(date.year, date.month, 1),
+      DateTime(date.year, date.month + 1, 0),
+    );
+  }
+
   Future<void> updateTransaction(Transaction transaction) async {
     await _databaseService.updateTransaction(transaction);
     notifyListeners();

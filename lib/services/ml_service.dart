@@ -74,7 +74,7 @@ class MLService {
 
     // Modify the amount column to be a running total
     transactionsDataFrame =
-        _transformAmountToRunningTotal(transactionsDataFrame, 'amount');
+        transformAmountToRunningTotal(transactionsDataFrame, 'amount');
 
     // Using a linear regressor to predict future monthly expenses
     final regressor = LinearRegressor(transactionsDataFrame, 'amount');
@@ -110,7 +110,7 @@ class MLService {
 
     // Modify the amount column to be a running total
     transactionsDataFrame =
-        _transformAmountToRunningTotal(transactionsDataFrame, 'amount');
+        transformAmountToRunningTotal(transactionsDataFrame, 'amount');
 
     // Using a linear regressor to predict if an account is at risk of going negative
     final regressor = LinearRegressor(transactionsDataFrame, 'amount');
@@ -144,7 +144,7 @@ class MLService {
 
     // Modify the amount column to be a running total
     transactionsDataFrame =
-        _transformAmountToRunningTotal(transactionsDataFrame, 'amount');
+        transformAmountToRunningTotal(transactionsDataFrame, 'amount');
 
     // Using a linear regressor to predict if a budget will be exceeded
     final regressor = LinearRegressor(transactionsDataFrame, 'amount');
@@ -160,8 +160,6 @@ class MLService {
         ],
         headerExists: false,
         header: ['date']));
-
-    print(-prediction.rows.first.first);
 
     return -prediction.rows.first.first > budget.amount;
   }
@@ -199,7 +197,7 @@ class MLService {
     return false;
   }
 
-  DataFrame _transformAmountToRunningTotal(
+  DataFrame transformAmountToRunningTotal(
       DataFrame inputDataFrame, String columnName) {
     // Extract the 'amount' column data
     final amounts = inputDataFrame[columnName].data;

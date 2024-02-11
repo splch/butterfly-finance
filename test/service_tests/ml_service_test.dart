@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
+import 'package:ml_dataframe/ml_dataframe.dart';
 import 'package:butterfly_finance/models/account.dart';
 import 'package:butterfly_finance/models/budget.dart';
 import 'package:butterfly_finance/models/net_worth.dart';
@@ -12,7 +13,7 @@ void main() {
   late DatabaseService databaseService;
   late MLService mlService;
   late Isar isar;
-  final now = DateTime.now();
+  final date = DateTime.now();
 
   setUp(() async {
     final directory = Directory.systemTemp.createTempSync();
@@ -32,20 +33,19 @@ void main() {
   });
 
   group('MLService Tests', () {
-    // Example: Test Net Worth Prediction
     test('Predict Net Worth', () async {
       // Setup: Insert net worth records
       final netWorthRecords = [
         NetWorth()
-          ..date = now.subtract(Duration(days: 365))
+          ..date = date.subtract(Duration(days: 365))
           ..totalAssets = 10000.0
           ..totalLiabilities = 5000.0,
         NetWorth()
-          ..date = now.subtract(Duration(days: 180))
+          ..date = date.subtract(Duration(days: 180))
           ..totalAssets = 12000.0
           ..totalLiabilities = 6000.0,
         NetWorth()
-          ..date = now
+          ..date = date
           ..totalAssets = 15000.0
           ..totalLiabilities = 7000.0,
       ];
@@ -55,13 +55,13 @@ void main() {
       }
 
       // Act: Predict future net worth
-      final predictionDate = now.add(Duration(days: 30));
+      final predictionDate = date.add(Duration(days: 30));
       final predictedNetWorth = await mlService.predictNetWorth(predictionDate);
 
       // Assert: Validate the prediction (exact validation depends on your model and data)
       expect(predictedNetWorth, isNotNull);
       expect(predictedNetWorth, isA<double>());
-      expect(predictedNetWorth, greaterThan(0.0));
+      expect(predictedNetWorth, greaterThan(15000.0 - 7000.0));
     });
 
     test('Predict Monthly Expenses', () async {
@@ -95,13 +95,8 @@ void main() {
       // Assert: Validate the prediction
       expect(predictedExpenses, isNotNull);
       expect(predictedExpenses, isA<double>());
-      expect(predictedExpenses, lessThan(0.0));
+      expect(predictedExpenses, lessThan(-500.0));
     });
-
-    // late String accountId;
-    // late String accountName;
-    // late String accountType;
-    // late double balance;
 
     test('Predict Account Risk', () async {
       // Setup: Insert an account and its transactions
@@ -117,21 +112,21 @@ void main() {
         Transaction()
           ..transactionId = '1'
           ..accountId = account.accountId
-          ..date = DateTime(now.year, now.month, 2)
+          ..date = DateTime(date.year, date.month, 2)
           ..amount = -200.0
           ..category = 'Groceries'
           ..description = 'Groceries for the month',
         Transaction()
           ..transactionId = '2'
           ..accountId = account.accountId
-          ..date = DateTime(now.year, now.month, 5)
+          ..date = DateTime(date.year, date.month, 5)
           ..amount = -300.0
           ..category = 'Utilities'
           ..description = 'Electricity bill',
         Transaction()
           ..transactionId = '3'
           ..accountId = account.accountId
-          ..date = DateTime(now.year, now.month, 10)
+          ..date = DateTime(date.year, date.month, 10)
           ..amount = -1000.0
           ..category = 'Rent'
           ..description = 'Monthly rent',
@@ -159,21 +154,21 @@ void main() {
         Transaction()
           ..transactionId = '1'
           ..accountId = '1'
-          ..date = DateTime(now.year, now.month, 2)
+          ..date = DateTime(date.year, date.month, 2)
           ..amount = -200.0
           ..category = 'Groceries'
           ..description = 'Eggs and milk',
         Transaction()
           ..transactionId = '2'
           ..accountId = '1'
-          ..date = DateTime(now.year, now.month, 5)
+          ..date = DateTime(date.year, date.month, 5)
           ..amount = -50.0
           ..category = 'Groceries'
           ..description = 'Bread and butter',
         Transaction()
           ..transactionId = '3'
           ..accountId = '1'
-          ..date = DateTime(now.year, now.month, 10)
+          ..date = DateTime(date.year, date.month, 10)
           ..amount = -100.0
           ..category = 'Groceries'
           ..description = 'Fruits and vegetables',
@@ -196,15 +191,15 @@ void main() {
       // Setup: Insert net worth records
       final netWorthRecords = [
         NetWorth()
-          ..date = now.subtract(Duration(days: 365))
+          ..date = date.subtract(Duration(days: 365))
           ..totalAssets = 10000.0
           ..totalLiabilities = 5000.0,
         NetWorth()
-          ..date = now.subtract(Duration(days: 180))
+          ..date = date.subtract(Duration(days: 180))
           ..totalAssets = 12000.0
           ..totalLiabilities = 6000.0,
         NetWorth()
-          ..date = now
+          ..date = date
           ..totalAssets = 50000.0
           ..totalLiabilities = 7000.0,
       ];
@@ -216,15 +211,39 @@ void main() {
       // Act: Predict if a net worth record exceeds the expected value
       final isExceeded = await mlService.predictNetWorthExceeded(
         NetWorth()
-          ..date = now
+          ..date = date
           // Subtracting a dummy value to simulate the current predicted assets
-          ..totalAssets = await mlService.predictNetWorth(now) - 7000.0
+          ..totalAssets = await mlService.predictNetWorth(date) - 7000.0
           ..totalLiabilities = 7000.0,
       );
 
       // Assert: Validate the prediction
       expect(isExceeded, isNotNull);
       expect(isExceeded, isTrue);
+    });
+
+    test('Running Total', () {
+      // Setup: Create a DataFrame
+      final transactionsDataFrame = DataFrame(
+        [
+          [1, 100.0],
+          [2, 200.0],
+          [3, 300.0],
+        ],
+        headerExists: false,
+        header: ['date', 'amount'],
+      );
+
+      // Act: Modify the amount column to be a running total
+      final runningTotalDataFrame = mlService.transformAmountToRunningTotal(
+          transactionsDataFrame, 'amount');
+
+      // Assert: Validate the running total
+      expect(runningTotalDataFrame.rows, [
+        [1, 100.0],
+        [2, 300.0],
+        [3, 600.0],
+      ]);
     });
   });
 }

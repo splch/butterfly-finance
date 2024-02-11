@@ -10,6 +10,7 @@ import 'package:butterfly_finance/models/transaction.dart';
 void main() {
   late DatabaseService databaseService;
   late Isar isar;
+  final date = DateTime.now();
 
   setUp(() async {
     final directory = Directory.systemTemp.createTempSync();
@@ -164,7 +165,7 @@ void main() {
     final testTransaction = Transaction()
       ..transactionId = '123'
       ..accountId = '456'
-      ..date = DateTime.now()
+      ..date = date
       ..amount = 100.0
       ..category = 'Groceries'
       ..description = 'Grocery shopping';
@@ -189,6 +190,17 @@ void main() {
           .getTransaction(transactionId); // Adjust to use the returned ID
       expect(transaction, isNotNull);
       expect(transaction!.amount, testTransaction.amount);
+    });
+
+    test('Get Monthly Transactions', () async {
+      await databaseService.addTransaction(testTransaction);
+
+      final monthlyTransactions =
+          await databaseService.getTransactionsBetweenDates(
+        DateTime(date.year, date.month, 1),
+        DateTime(date.year, date.month + 1, 0),
+      );
+      expect(monthlyTransactions.isNotEmpty, true);
     });
 
     test('Update a Transaction', () async {
