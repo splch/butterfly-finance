@@ -16,6 +16,11 @@ class DatabaseService {
     );
   }
 
+  // Close the database
+  Future<void> closeDatabase({bool deleteFromDisk = false}) async {
+    await isar.close(deleteFromDisk: deleteFromDisk);
+  }
+
   // Account operations
   Future<int> addAccount(Account account) async {
     return await isar.writeTxn(() => isar.accounts.put(account));
@@ -106,6 +111,11 @@ class DatabaseService {
 
   Future<void> deleteNetWorth(int id) async {
     await isar.writeTxn(() => isar.netWorths.delete(id));
+  }
+
+  // Most recent net worth
+  Future<NetWorth?> getMostRecentNetWorth() async {
+    return isar.netWorths.where().sortByDate().findFirst();
   }
 
   // The net worths after a certain date

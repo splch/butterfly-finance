@@ -5,13 +5,11 @@ void main() {
   group('Budget Model Tests', () {
     test('should correctly initialize a Budget object', () {
       final budget = Budget()
-        ..budgetId = 'B123'
-        ..categoryId = 'C456'
+        ..category = 'Groceries'
         ..amount = 500.0;
 
       // Verify the fields are correctly assigned
-      expect(budget.budgetId, 'B123');
-      expect(budget.categoryId, 'C456');
+      expect(budget.category, 'Groceries');
       expect(budget.amount, 500.0);
     });
   });

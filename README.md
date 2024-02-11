@@ -55,11 +55,11 @@ flutter run
 
 This project is developed using the following technology stack:
 
-- **Flutter**: For creating a cross-platform mobile application.
-- **Plaid**: For secure bank account linking and financial data aggregation.
-- **Isar**: For local database storage.
-- **fl_chart**: For generating charts and graphs.
-- **ml_algo**: For machine learning predictions.
+- **[Flutter](https://flutter.dev/)**: For creating a cross-platform mobile application.
+- **[Plaid](https://plaid.com/)**: For secure bank account linking and financial data aggregation.
+- **[isar](https://isar.dev/)**: For local database storage.
+- **[fl_chart](https://app.flchart.dev/#/line)**: For generating charts and graphs.
+- **[ml_algo](https://www.ml-algo.com/)**: For machine learning predictions.
 
 ## License
 

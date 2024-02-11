@@ -23,7 +23,7 @@ void main() {
   });
 
   tearDown(() async {
-    await isar.close(deleteFromDisk: true);
+    await databaseService.closeDatabase(deleteFromDisk: true);
   });
 
   group('AccountViewModel Tests', () {

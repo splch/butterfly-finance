@@ -23,8 +23,9 @@ void main() {
   });
 
   tearDown(() async {
-    await isar.close(deleteFromDisk: true);
+    await databaseService.closeDatabase(deleteFromDisk: true);
   });
+
   group('TransactionViewModel Tests', () {
     late TransactionViewModel transactionViewModel;
 

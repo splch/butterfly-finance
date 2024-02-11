@@ -23,8 +23,9 @@ void main() {
   });
 
   tearDown(() async {
-    await isar.close(deleteFromDisk: true);
+    await databaseService.closeDatabase(deleteFromDisk: true);
   });
+
   group('BudgetViewModel Tests', () {
     late BudgetViewModel budgetViewModel;
 
@@ -35,14 +36,13 @@ void main() {
 
     test('Add and Retrieve Budget', () async {
       final testBudget = Budget()
-        ..budgetId = 'testId'
-        ..categoryId = 'Groceries'
+        ..category = 'Groceries'
         ..amount = 500.0;
 
       await budgetViewModel.addBudget(testBudget);
       final budgets = await budgetViewModel.getAllBudgets();
       expect(budgets.isNotEmpty, true);
-      expect(budgets.first.categoryId, equals('Groceries'));
+      expect(budgets.first.category, equals('Groceries'));
     });
   });
 }

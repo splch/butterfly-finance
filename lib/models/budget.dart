@@ -6,7 +6,6 @@ part 'budget.g.dart';
 class Budget {
   Id id = Isar.autoIncrement;
 
-  late String budgetId;
-  late String categoryId;
+  late String category;
   late double amount;
 }

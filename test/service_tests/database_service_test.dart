@@ -25,7 +25,7 @@ void main() {
   });
 
   tearDown(() async {
-    await isar.close(deleteFromDisk: true);
+    await databaseService.closeDatabase(deleteFromDisk: true);
   });
 
   group('Account CRUD Operations', () {
@@ -74,8 +74,7 @@ void main() {
 
   group('Budget CRUD Operations', () {
     final testBudget = Budget()
-      ..budgetId = '123'
-      ..categoryId = '456'
+      ..category = 'Groceries'
       ..amount = 100.0;
 
     test('Create a Budget', () async {
@@ -83,6 +82,7 @@ void main() {
 
       final budgets = await databaseService.getAllBudgets();
       expect(budgets.isNotEmpty, true);
+      expect(budgets.first.category, testBudget.category);
       expect(budgets.first.amount, testBudget.amount);
     });
 
