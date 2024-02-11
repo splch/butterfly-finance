@@ -59,15 +59,12 @@ class MLService {
 
   // Method to predict total monthly expenses based on past records
   Future<double> predictMonthlyExpenses(DateTime predictionDate) async {
-    final transactions = await _databaseService.getAllTransactions();
+    final transactions = await _databaseService.getTransactionsBetweenDates(
+        DateTime(DateTime.now().year, DateTime.now().month, 1), predictionDate);
     // Convert Transactions to DataFrame
-    final transactionsDataFrame = DataFrame(
+    DataFrame transactionsDataFrame = DataFrame(
         transactions
-            .where((transaction) =>
-                transaction.date.isBefore(predictionDate) &&
-                transaction.date.isAfter(
-                    DateTime(predictionDate.year, predictionDate.month - 1)) &&
-                transaction.amount < 0)
+            .where((transaction) => transaction.amount < 0)
             .map((transaction) => [
                   transaction.date.millisecondsSinceEpoch.toDouble(),
                   transaction.amount,
@@ -75,10 +72,14 @@ class MLService {
         headerExists: false,
         header: ['date', 'amount']);
 
+    // Modify the amount column to be a running total
+    transactionsDataFrame =
+        _transformAmountToRunningTotal(transactionsDataFrame, 'amount');
+
     // Using a linear regressor to predict future monthly expenses
     final regressor = LinearRegressor(transactionsDataFrame, 'amount');
 
-    // Predicting future monthly expenses (dummy example)
+    // Predicting future monthly expenses
     final predictedMonthlyExpenses = regressor.predict(DataFrame(
         [
           [predictionDate.millisecondsSinceEpoch.toDouble()]
@@ -93,37 +94,9 @@ class MLService {
   Future<bool> predictAccountRisk(Account account) async {
     final transactions = await _databaseService.getAllTransactions();
     // Convert Transactions to DataFrame
-    final transactionsDataFrame = DataFrame(
+    DataFrame transactionsDataFrame = DataFrame(
         transactions
             .where((transaction) => transaction.accountId == account.accountId)
-            .map((transaction) => [
-                  transaction.date.millisecondsSinceEpoch.toDouble(),
-                  transaction.amount,
-                ]),
-        headerExists: false,
-        header: ['date', 'amount']);
-
-    // Using a linear regressor to predict if an account is at risk of going negative
-    final regressor = LinearRegressor(transactionsDataFrame, 'amount');
-
-    // Predicting if an account is at risk of going negative (dummy example)
-    final prediction = regressor.predict(DataFrame(
-        [
-          [DateTime.now().millisecondsSinceEpoch.toDouble()]
-        ],
-        headerExists: false,
-        header: ['date']));
-
-    return prediction.rows.first.first < 0;
-  }
-
-  // Method to predict if a budget will be exceeded
-  Future<bool> predictBudgetExceeded(Budget budget) async {
-    final transactions = await _databaseService.getAllTransactions();
-    // Convert Transactions to DataFrame
-    final transactionsDataFrame = DataFrame(
-        transactions
-            .where((transaction) => transaction.category == budget.category)
             .where((transaction) => transaction.date.isAfter(
                 DateTime(DateTime.now().year, DateTime.now().month, 1)))
             .where((transaction) => transaction.date.isBefore(
@@ -135,6 +108,44 @@ class MLService {
         headerExists: false,
         header: ['date', 'amount']);
 
+    // Modify the amount column to be a running total
+    transactionsDataFrame =
+        _transformAmountToRunningTotal(transactionsDataFrame, 'amount');
+
+    // Using a linear regressor to predict if an account is at risk of going negative
+    final regressor = LinearRegressor(transactionsDataFrame, 'amount');
+
+    // Predicting if an account is at risk of going negative
+    final prediction = regressor.predict(DataFrame(
+        [
+          [DateTime.now().millisecondsSinceEpoch.toDouble()]
+        ],
+        headerExists: false,
+        header: ['date']));
+
+    return account.balance + prediction.rows.first.first < 0;
+  }
+
+  // Method to predict if a budget will be exceeded
+  Future<bool> predictBudgetExceeded(Budget budget) async {
+    final transactions = await _databaseService.getTransactionsBetweenDates(
+        DateTime(DateTime.now().year, DateTime.now().month, 1),
+        DateTime(DateTime.now().year, DateTime.now().month + 1, 1));
+    // Convert Transactions to DataFrame
+    DataFrame transactionsDataFrame = DataFrame(
+        transactions
+            .where((transaction) => transaction.category == budget.category)
+            .map((transaction) => [
+                  transaction.date.millisecondsSinceEpoch.toDouble(),
+                  transaction.amount,
+                ]),
+        headerExists: false,
+        header: ['date', 'amount']);
+
+    // Modify the amount column to be a running total
+    transactionsDataFrame =
+        _transformAmountToRunningTotal(transactionsDataFrame, 'amount');
+
     // Using a linear regressor to predict if a budget will be exceeded
     final regressor = LinearRegressor(transactionsDataFrame, 'amount');
 
@@ -143,18 +154,16 @@ class MLService {
         [
           [
             DateTime(DateTime.now().year, DateTime.now().month + 1, 1)
-                    .millisecondsSinceEpoch
-                    .toDouble() -
-                1.0
+                .millisecondsSinceEpoch
+                .toDouble()
           ]
         ],
         headerExists: false,
         header: ['date']));
 
-    // Calculating the sum of predicted and actual spend
-    final totalSpendPrediction = prediction.rows.first.first +
-        transactionsDataFrame['amount'].data.reduce((a, b) => a + b);
-    return -totalSpendPrediction > budget.amount;
+    print(-prediction.rows.first.first);
+
+    return -prediction.rows.first.first > budget.amount;
   }
 
   // Method to predict if a net worth record exceeds the expected value
@@ -174,7 +183,7 @@ class MLService {
     // Using a linear regressor to predict if a net worth record exceeds the expected value
     final regressor = LinearRegressor(netWorthDataFrame, 'netWorth');
 
-    // Predicting if a net worth record exceeds the expected value (dummy example)
+    // Predicting if a net worth record exceeds the expected value
     final prediction = regressor.predict(DataFrame(
         [
           [netWorth.date.millisecondsSinceEpoch.toDouble()]
@@ -188,5 +197,29 @@ class MLService {
   // Method to predict if a transaction is fraudulent
   Future<bool> predictFraudulentTransaction(Transaction transaction) async {
     return false;
+  }
+
+  DataFrame _transformAmountToRunningTotal(
+      DataFrame inputDataFrame, String columnName) {
+    // Extract the 'amount' column data
+    final amounts = inputDataFrame[columnName].data;
+    var runningTotal = 0.0;
+
+    // Calculate the running totals
+    final runningTotals = amounts.map((value) {
+      runningTotal += value as double;
+      return runningTotal;
+    }).toList();
+
+    // Create a new Series with the running totals
+    final runningTotalSeries = Series(columnName, runningTotals);
+
+    // Drop the old 'amount' series from the DataFrame
+    final tempDataFrame = inputDataFrame.dropSeries(names: [columnName]);
+
+    // Add the new runningTotalSeries to the DataFrame
+    final updatedDataFrame = tempDataFrame.addSeries(runningTotalSeries);
+
+    return updatedDataFrame;
   }
 }

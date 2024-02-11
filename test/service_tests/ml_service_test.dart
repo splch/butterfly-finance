@@ -12,6 +12,7 @@ void main() {
   late DatabaseService databaseService;
   late MLService mlService;
   late Isar isar;
+  final now = DateTime.now();
 
   setUp(() async {
     final directory = Directory.systemTemp.createTempSync();
@@ -36,15 +37,15 @@ void main() {
       // Setup: Insert net worth records
       final netWorthRecords = [
         NetWorth()
-          ..date = DateTime.now().subtract(Duration(days: 365))
+          ..date = now.subtract(Duration(days: 365))
           ..totalAssets = 10000.0
           ..totalLiabilities = 5000.0,
         NetWorth()
-          ..date = DateTime.now().subtract(Duration(days: 180))
+          ..date = now.subtract(Duration(days: 180))
           ..totalAssets = 12000.0
           ..totalLiabilities = 6000.0,
         NetWorth()
-          ..date = DateTime.now()
+          ..date = now
           ..totalAssets = 15000.0
           ..totalLiabilities = 7000.0,
       ];
@@ -54,7 +55,7 @@ void main() {
       }
 
       // Act: Predict future net worth
-      final predictionDate = DateTime.now().add(Duration(days: 30));
+      final predictionDate = now.add(Duration(days: 30));
       final predictedNetWorth = await mlService.predictNetWorth(predictionDate);
 
       // Assert: Validate the prediction (exact validation depends on your model and data)
@@ -108,7 +109,7 @@ void main() {
         ..accountId = 'accRisk'
         ..accountName = 'Checking Account'
         ..accountType = 'Checking'
-        ..balance = 1000.0;
+        ..balance = 2000.0;
 
       final _ = await databaseService.addAccount(account);
 
@@ -116,17 +117,24 @@ void main() {
         Transaction()
           ..transactionId = '1'
           ..accountId = account.accountId
-          ..date = DateTime.now().subtract(const Duration(days: 20))
+          ..date = DateTime(now.year, now.month, 2)
           ..amount = -200.0
           ..category = 'Groceries'
           ..description = 'Groceries for the month',
         Transaction()
           ..transactionId = '2'
           ..accountId = account.accountId
-          ..date = DateTime.now().subtract(const Duration(days: 15))
+          ..date = DateTime(now.year, now.month, 5)
           ..amount = -300.0
           ..category = 'Utilities'
           ..description = 'Electricity bill',
+        Transaction()
+          ..transactionId = '3'
+          ..accountId = account.accountId
+          ..date = DateTime(now.year, now.month, 10)
+          ..amount = -1000.0
+          ..category = 'Rent'
+          ..description = 'Monthly rent',
       ];
 
       for (var transaction in transactions) {
@@ -151,17 +159,24 @@ void main() {
         Transaction()
           ..transactionId = '1'
           ..accountId = '1'
-          ..date = DateTime(DateTime.now().year, DateTime.now().month, 2)
+          ..date = DateTime(now.year, now.month, 2)
           ..amount = -200.0
           ..category = 'Groceries'
           ..description = 'Eggs and milk',
         Transaction()
           ..transactionId = '2'
           ..accountId = '1'
-          ..date = DateTime(DateTime.now().year, DateTime.now().month, 5)
-          ..amount = -100.0
+          ..date = DateTime(now.year, now.month, 5)
+          ..amount = -50.0
           ..category = 'Groceries'
           ..description = 'Bread and butter',
+        Transaction()
+          ..transactionId = '3'
+          ..accountId = '1'
+          ..date = DateTime(now.year, now.month, 10)
+          ..amount = -100.0
+          ..category = 'Groceries'
+          ..description = 'Fruits and vegetables',
       ];
 
       for (var transaction in transactions) {
@@ -181,15 +196,15 @@ void main() {
       // Setup: Insert net worth records
       final netWorthRecords = [
         NetWorth()
-          ..date = DateTime.now().subtract(Duration(days: 365))
+          ..date = now.subtract(Duration(days: 365))
           ..totalAssets = 10000.0
           ..totalLiabilities = 5000.0,
         NetWorth()
-          ..date = DateTime.now().subtract(Duration(days: 180))
+          ..date = now.subtract(Duration(days: 180))
           ..totalAssets = 12000.0
           ..totalLiabilities = 6000.0,
         NetWorth()
-          ..date = DateTime.now()
+          ..date = now
           ..totalAssets = 50000.0
           ..totalLiabilities = 7000.0,
       ];
@@ -201,10 +216,9 @@ void main() {
       // Act: Predict if a net worth record exceeds the expected value
       final isExceeded = await mlService.predictNetWorthExceeded(
         NetWorth()
-          ..date = DateTime.now()
+          ..date = now
           // Subtracting a dummy value to simulate the current predicted assets
-          ..totalAssets =
-              await mlService.predictNetWorth(DateTime.now()) - 7000.0
+          ..totalAssets = await mlService.predictNetWorth(now) - 7000.0
           ..totalLiabilities = 7000.0,
       );
 

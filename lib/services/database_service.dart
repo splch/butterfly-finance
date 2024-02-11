@@ -53,6 +53,17 @@ class DatabaseService {
     return isar.transactions.where().findAll();
   }
 
+  Future<List<Transaction>> getTransactionsBetweenDates(
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    return isar.transactions
+        .where()
+        .filter()
+        .dateBetween(startDate, endDate)
+        .findAll();
+  }
+
   Future<Transaction?> getTransaction(int id) async {
     return isar.transactions.get(id);
   }
