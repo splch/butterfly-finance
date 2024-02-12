@@ -10,6 +10,9 @@ void main() {
   late Isar isar;
 
   setUp(() async {
+    // Initialize the Isar instance
+    await Isar.initializeIsarCore(download: true);
+
     final directory = Directory.systemTemp.createTempSync();
 
     isar = await Isar.open(

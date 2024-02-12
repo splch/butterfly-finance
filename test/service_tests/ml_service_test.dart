@@ -16,6 +16,9 @@ void main() {
   final date = DateTime.now();
 
   setUp(() async {
+    // Initialize the Isar instance
+    await Isar.initializeIsarCore(download: true);
+
     final directory = Directory.systemTemp.createTempSync();
 
     isar = await Isar.open(
