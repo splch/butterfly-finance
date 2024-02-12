@@ -1,0 +1,44 @@
+Data Minimization Policy
+
+1. Purpose
+
+This Data Minimization Policy establishes the principles and procedures followed by Butterfly Finance to ensure that we collect, use, and retain only the data necessary for providing our services efficiently and in compliance with applicable data privacy laws. Given that Butterfly Finance does not store customer data, this policy emphasizes our commitment to data minimization and the protection of user privacy.
+
+2. Scope
+
+This policy applies to all processes and operations within Butterfly Finance that involve the handling of user data, including data transmitted to or from third-party services like Plaid. It covers all employees, contractors, and third parties involved in these processes.
+
+3. Data Collection
+
+- Butterfly Finance operates on a principle of zero data retention. No customer data is stored on our servers.
+- The app facilitates direct communication between the user's device and Plaid, ensuring that any sensitive information, including financial data and API keys, remains within the user's control.
+
+4. Data Use
+
+- Data accessed through the app is used solely for the purpose of providing the requested financial services to the user.
+- Data is processed transiently and never recorded or stored in any form by Butterfly Finance.
+
+5. Data Retention and Deletion
+
+- As Butterfly Finance does not store any customer data, there are no retention periods to define.
+- Users are advised that their data's retention and deletion policies are governed by the services they connect to through Butterfly Finance, including Plaid. Users should refer to these services' policies for details.
+
+6. Compliance
+
+- This policy, and all operations of Butterfly Finance, are designed to be in compliance with applicable data privacy laws, including but not limited to the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA).
+- Butterfly Finance commits to regular reviews of this policy and our practices to ensure ongoing compliance.
+
+7. Responsibilities
+
+- All employees and contractors of Butterfly Finance are responsible for adhering to this policy in their handling of user data.
+- Butterfly Finance does not assume responsibility for the data practices of third-party services connected by users, including data retention and deletion policies.
+
+8. Documentation
+
+- This Data Minimization Policy serves as the primary document outlining our approach to data deletion and retention. Given our model of non-retention, additional documentation on these processes is not applicable.
+
+9. Policy Review and Update
+
+- This policy will be reviewed annually or in response to significant changes to our operations or applicable laws. Any updates will be communicated to relevant stakeholders.
+
+This policy is effective as of 02-11-2024. Butterfly Finance's commitment to data minimization and privacy protection is central to our mission of providing secure and user-centered financial services.

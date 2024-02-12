@@ -1,9 +1,10 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:butterfly_finance/models/account.dart';
-import 'package:butterfly_finance/models/transaction.dart';
 import 'package:butterfly_finance/models/budget.dart';
 import 'package:butterfly_finance/models/net_worth.dart';
+import 'package:butterfly_finance/models/transaction.dart';
+import 'package:butterfly_finance/models/user.dart';
 
 class DatabaseService {
   late final Isar isar;
@@ -11,7 +12,13 @@ class DatabaseService {
   Future<void> initializeDatabase() async {
     final dir = await getApplicationDocumentsDirectory();
     isar = await Isar.open(
-      [AccountSchema, TransactionSchema, BudgetSchema, NetWorthSchema],
+      [
+        AccountSchema,
+        BudgetSchema,
+        NetWorthSchema,
+        TransactionSchema,
+        UserSchema
+      ],
       directory: dir.path,
     );
   }
@@ -132,6 +139,40 @@ class DatabaseService {
   // The net worths after a certain date
   Future<List<NetWorth>> getNetWorthsAfterDate(DateTime startDate) async {
     return isar.netWorths.where().filter().dateGreaterThan(startDate).findAll();
+  }
+
+  // User operations
+  Future<int> addUser(User user) async {
+    return await isar.writeTxn(() => isar.users.put(user));
+  }
+
+  Future<User?> getUser(String? email) async {
+    if (email != null) {
+      return isar.users.where().filter().emailEqualTo(email).findFirst();
+    }
+    return isar.users.where().findFirst();
+  }
+
+  Future<List<User>> getAllUsers() async {
+    return isar.users.where().findAll();
+  }
+
+  Future<void> updateUser(User user) async {
+    await isar.writeTxn(() => isar.users.put(user));
+  }
+
+  Future<void> deleteUser(String email) async {
+    final user = await getUser(email);
+    await isar.writeTxn(() => isar.users.delete(user!.id));
+  }
+
+  // Get a user's Plaid keys
+  Future<Map<String, String>> getPlaidKeys(String email) async {
+    final user = await getUser(email);
+    return {
+      'clientId': user!.plaidClientId,
+      'secret': user.plaidSecret,
+    };
   }
 
   // The amount spent in each budget category for a given date range

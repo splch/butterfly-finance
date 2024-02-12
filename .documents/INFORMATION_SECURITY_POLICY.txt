@@ -1,0 +1,46 @@
+Butterfly Finance Information Security Policy
+
+1. Purpose
+
+This Information Security Policy outlines the security practices and measures implemented by Butterfly Finance to ensure the confidentiality, integrity, and availability of all data managed by our application. It aims to protect against information security threats, whether internal or external, deliberate, or accidental.
+
+2. Scope
+
+This policy applies to all data, systems, and infrastructure related to Butterfly Finance, including all users, employees, contractors, and third parties who have access to Butterfly Finance systems or data.
+
+3. Information Security Principles
+
+- Confidentiality: All user data, including API keys and financial information, is confidential and must be accessed only by authorized users.
+- Integrity: Measures are in place to ensure data accuracy and consistency, preventing unauthorized data modification.
+- Availability: Systems and data must be accessible to authorized users when needed, ensuring reliable and timely access.
+
+4. User Responsibility
+
+- Users are solely responsible for the security and management of their data, including API keys and personal financial information.
+- Users are encouraged to follow best practices for data security, such as using strong, unique passwords and enabling two-factor authentication (2FA) where possible.
+
+5. Data Encryption
+
+- All data transmitted to and from Butterfly Finance is encrypted using industry-standard encryption protocols to prevent data interception and unauthorized access.
+
+6. Physical Security
+
+- Given that Butterfly Finance operates exclusively as software, physical security measures are beyond the scope of this policy. However, users are advised to secure their physical electronic devices against unauthorized access.
+
+7. Incident Response
+
+- Butterfly Finance has implemented an incident response plan to address security breaches or incidents promptly. Users are encouraged to report any suspected security incidents related to Butterfly Finance immediately.
+
+8. Policy Review and Update
+
+- This Information Security Policy will be reviewed and updated regularly to adapt to new security threats and changes in technology.
+
+9. Compliance
+
+- Butterfly Finance commits to complying with applicable laws, regulations, and industry standards regarding information security and data protection.
+
+10. Disclaimer
+
+- Butterfly Finance assumes no responsibility for the loss, theft, or compromise of user data due to users' negligence or failure to secure their data and devices. Users are in complete control of their data and must adhere to best practices to secure their information.
+
+This policy is effective as of 02-11-2024 and reaffirms Butterfly Finance's commitment to maintaining the highest standards of information security.

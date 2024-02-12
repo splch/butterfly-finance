@@ -104,7 +104,9 @@ void main() {
         ..accountId = 'accRisk'
         ..accountName = 'Checking Account'
         ..accountType = 'Checking'
-        ..balance = 2000.0;
+        ..balance = 2000.0
+        ..plaidAccessToken = '123'
+        ..plaidItemId = '456';
 
       final _ = await databaseService.addAccount(account);
 

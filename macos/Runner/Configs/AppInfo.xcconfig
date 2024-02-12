@@ -8,7 +8,7 @@
 PRODUCT_NAME = butterfly_finance
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.splch.butterflyFinance
+PRODUCT_BUNDLE_IDENTIFIER = net.splch.butterflyfinance
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.splch. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 net.splch. All rights reserved.

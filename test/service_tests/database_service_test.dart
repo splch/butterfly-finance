@@ -6,6 +6,7 @@ import 'package:butterfly_finance/models/account.dart';
 import 'package:butterfly_finance/models/budget.dart';
 import 'package:butterfly_finance/models/net_worth.dart';
 import 'package:butterfly_finance/models/transaction.dart';
+import 'package:butterfly_finance/models/user.dart';
 
 void main() {
   late DatabaseService databaseService;
@@ -16,7 +17,13 @@ void main() {
     final directory = Directory.systemTemp.createTempSync();
 
     isar = await Isar.open(
-      [AccountSchema, BudgetSchema, NetWorthSchema, TransactionSchema],
+      [
+        AccountSchema,
+        BudgetSchema,
+        NetWorthSchema,
+        TransactionSchema,
+        UserSchema
+      ],
       directory: directory.path,
     );
 
@@ -34,7 +41,9 @@ void main() {
       ..accountId = '123'
       ..accountName = 'Test Account'
       ..accountType = 'Checking'
-      ..balance = 100.0;
+      ..balance = 100.0
+      ..plaidAccessToken = '123'
+      ..plaidItemId = '456';
 
     test('Create an Account', () async {
       await databaseService.addAccount(testAccount);
@@ -223,6 +232,58 @@ void main() {
       await databaseService.deleteTransaction(transactionId);
       final transaction = await databaseService.getTransaction(transactionId);
       expect(transaction, isNull);
+    });
+  });
+
+  group('User CRUD Operations', () {
+    final testUser = User()
+      ..email = 'user@example.com'
+      ..name = 'Test User'
+      ..plaidClientId = '123'
+      ..plaidSecret = '456';
+
+    test('Create a User', () async {
+      await databaseService.addUser(testUser);
+
+      final users = await databaseService.getAllUsers();
+      expect(users.isNotEmpty, true);
+      expect(users.first.email, testUser.email);
+      expect(users.first.name, testUser.name);
+      expect(users.first.plaidClientId, testUser.plaidClientId);
+      expect(users.first.plaidSecret, testUser.plaidSecret);
+    });
+
+    test('Read a User', () async {
+      final int userId = await databaseService.addUser(testUser);
+      final user = await databaseService.getUser(testUser.email);
+      expect(user, isNotNull);
+      expect(user!.email, testUser.email);
+    });
+
+    test('Update a User', () async {
+      final int userId = await databaseService.addUser(testUser);
+      testUser.id = userId;
+      testUser.name = 'Updated User'; // Change a field
+      await databaseService.updateUser(testUser);
+
+      final updatedUser = await databaseService.getUser(testUser.email);
+      expect(updatedUser, isNotNull);
+      expect(updatedUser!.name, 'Updated User');
+    });
+
+    test('Delete a User', () async {
+      final int userId = await databaseService.addUser(testUser);
+      await databaseService.deleteUser(testUser.email);
+      final user = await databaseService.getUser(testUser.email);
+      expect(user, isNull);
+    });
+
+    test('Get Plaid Keys', () async {
+      final int userId = await databaseService.addUser(testUser);
+      final plaidKeys = await databaseService.getPlaidKeys(testUser.email);
+      expect(plaidKeys.isNotEmpty, true);
+      expect(plaidKeys['clientId'], testUser.plaidClientId);
+      expect(plaidKeys['secret'], testUser.plaidSecret);
     });
   });
 }

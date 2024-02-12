@@ -10,4 +10,7 @@ class Account {
   late String accountName;
   late String accountType;
   late double balance;
+
+  late String plaidAccessToken;
+  late String plaidItemId;
 }

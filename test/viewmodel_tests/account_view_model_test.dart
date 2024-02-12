@@ -39,7 +39,9 @@ void main() {
         ..accountId = 'testId'
         ..accountName = 'Test Account'
         ..accountType = 'Savings'
-        ..balance = 1000.0;
+        ..balance = 1000.0
+        ..plaidAccessToken = '123'
+        ..plaidItemId = '456';
 
       await accountViewModel.addAccount(testAccount);
       final accounts = await accountViewModel.getAllAccounts();
