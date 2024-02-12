@@ -37,11 +37,11 @@ void main() {
       // Setup: Insert net worth records
       final netWorthRecords = [
         NetWorth()
-          ..date = date.subtract(Duration(days: 365))
+          ..date = date.subtract(const Duration(days: 365))
           ..totalAssets = 10000.0
           ..totalLiabilities = 5000.0,
         NetWorth()
-          ..date = date.subtract(Duration(days: 180))
+          ..date = date.subtract(const Duration(days: 180))
           ..totalAssets = 12000.0
           ..totalLiabilities = 6000.0,
         NetWorth()
@@ -55,7 +55,7 @@ void main() {
       }
 
       // Act: Predict future net worth
-      final predictionDate = date.add(Duration(days: 30));
+      final predictionDate = date.add(const Duration(days: 30));
       final predictedNetWorth = await mlService.predictNetWorth(predictionDate);
 
       // Assert: Validate the prediction (exact validation depends on your model and data)
@@ -193,11 +193,11 @@ void main() {
       // Setup: Insert net worth records
       final netWorthRecords = [
         NetWorth()
-          ..date = date.subtract(Duration(days: 365))
+          ..date = date.subtract(const Duration(days: 365))
           ..totalAssets = 10000.0
           ..totalLiabilities = 5000.0,
         NetWorth()
-          ..date = date.subtract(Duration(days: 180))
+          ..date = date.subtract(const Duration(days: 180))
           ..totalAssets = 12000.0
           ..totalLiabilities = 6000.0,
         NetWorth()

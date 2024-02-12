@@ -254,7 +254,7 @@ void main() {
     });
 
     test('Read a User', () async {
-      final int userId = await databaseService.addUser(testUser);
+      await databaseService.addUser(testUser);
       final user = await databaseService.getUser(testUser.email);
       expect(user, isNotNull);
       expect(user!.email, testUser.email);
@@ -272,14 +272,14 @@ void main() {
     });
 
     test('Delete a User', () async {
-      final int userId = await databaseService.addUser(testUser);
+      await databaseService.addUser(testUser);
       await databaseService.deleteUser(testUser.email);
       final user = await databaseService.getUser(testUser.email);
       expect(user, isNull);
     });
 
     test('Get Plaid Keys', () async {
-      final int userId = await databaseService.addUser(testUser);
+      await databaseService.addUser(testUser);
       final plaidKeys = await databaseService.getPlaidKeys(testUser.email);
       expect(plaidKeys.isNotEmpty, true);
       expect(plaidKeys['clientId'], testUser.plaidClientId);

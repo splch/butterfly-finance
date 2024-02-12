@@ -17,27 +17,27 @@ class PlaidService {
     int transactionsDaysRequested = 730,
   }) async {
     final Uri url = Uri.parse('$baseUrl/link/token/create');
-    final response = await this.client.post(
-          url,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode({
-            'client_id': clientId,
-            'secret': secret,
-            'user': {
-              'client_user_id': clientUserId,
-            },
-            'client_name': 'Butterfly Finance',
-            'products': ['auth', 'balance', 'transactions'],
-            'transactions': {
-              'days_requested': transactionsDaysRequested,
-            },
-            'country_codes': ['US'],
-            'language': 'en',
-            'redirect_uri': redirectUri,
-          }),
-        );
+    final response = await client.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'client_id': clientId,
+        'secret': secret,
+        'user': {
+          'client_user_id': clientUserId,
+        },
+        'client_name': 'Butterfly Finance',
+        'products': ['auth', 'balance', 'transactions'],
+        'transactions': {
+          'days_requested': transactionsDaysRequested,
+        },
+        'country_codes': ['US'],
+        'language': 'en',
+        'redirect_uri': redirectUri,
+      }),
+    );
 
     if (response.statusCode == 200) {
       return LinkTokenResponse.fromJson(jsonDecode(response.body));
