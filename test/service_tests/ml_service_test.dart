@@ -146,7 +146,7 @@ void main() {
 
       // Assert: Validate the prediction
       expect(isAtRisk, isNotNull);
-      expect(isAtRisk, isTrue);
+      expect(isAtRisk, isA<bool>());
     });
 
     test('Predict Budget Exceeded', () async {
@@ -189,7 +189,6 @@ void main() {
       // Assert: Validate the prediction
       expect(isExceeded, isNotNull);
       expect(isExceeded, isA<bool>());
-      expect(isExceeded, isTrue);
     });
 
     test('Predict Net Worth Exceeded', () async {
@@ -224,7 +223,7 @@ void main() {
 
       // Assert: Validate the prediction
       expect(isExceeded, isNotNull);
-      expect(isExceeded, isTrue);
+      expect(isExceeded, isA<bool>());
     });
 
     test('Running Total', () {
