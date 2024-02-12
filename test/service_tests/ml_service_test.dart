@@ -118,21 +118,21 @@ void main() {
           ..transactionId = '1'
           ..accountId = account.accountId
           ..date = DateTime(date.year, date.month, 2)
-          ..amount = -200.0
+          ..amount = -500.0
           ..category = 'Groceries'
           ..description = 'Groceries for the month',
         Transaction()
           ..transactionId = '2'
           ..accountId = account.accountId
           ..date = DateTime(date.year, date.month, 5)
-          ..amount = -300.0
+          ..amount = -600.0
           ..category = 'Utilities'
           ..description = 'Electricity bill',
         Transaction()
           ..transactionId = '3'
           ..accountId = account.accountId
           ..date = DateTime(date.year, date.month, 10)
-          ..amount = -1000.0
+          ..amount = -800.0
           ..category = 'Rent'
           ..description = 'Monthly rent',
       ];
@@ -167,7 +167,7 @@ void main() {
           ..transactionId = '2'
           ..accountId = '1'
           ..date = DateTime(date.year, date.month, 5)
-          ..amount = -50.0
+          ..amount = -100.0
           ..category = 'Groceries'
           ..description = 'Bread and butter',
         Transaction()
