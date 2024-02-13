@@ -2,6 +2,8 @@
 
 Butterfly Finance is a personal finance application designed to help users manage their finances more efficiently. Developed with Flutter and leveraging Plaid for secure financial data integration, Butterfly Finance offers a range of features including bank account linking, transaction history, spending analysis, category-based budgeting, and net worth tracking — all within a standalone, user-friendly environment.
 
+![Butterfly Finance](https://github.com/splch/butterfly-finance/assets/25377399/c991ef61-c716-4596-8546-162d0fa3e18b)
+
 ## Features
 
 - **Bank Account Linking**: Securely link your bank accounts using Plaid.

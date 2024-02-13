@@ -4,6 +4,10 @@ import 'package:butterfly_finance/views/budget_view.dart';
 import 'package:butterfly_finance/views/net_worth_view.dart';
 import 'package:butterfly_finance/views/settings_view.dart';
 import 'package:butterfly_finance/views/transactions_view.dart';
+import 'package:butterfly_finance/widgets/net_worth_chart.dart';
+import 'package:butterfly_finance/widgets/budget_chart.dart';
+import 'package:butterfly_finance/widgets/transactions_list.dart';
+import 'package:butterfly_finance/widgets/financial_health_score.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -23,9 +27,9 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         childAspectRatio: 3.0,
         children: <Widget>[
-          _buildNavigationTile(context, 'Accounts', AccountsView()),
+          _buildNavigationTile(context, 'Net Worth', AccountsView()),
+          _buildNavigationTile(context, 'Financial Health', this),
           _buildNavigationTile(context, 'Budget', BudgetView()),
-          _buildNavigationTile(context, 'Net Worth', NetWorthView()),
           _buildNavigationTile(context, 'Transactions', TransactionsView()),
         ],
       ),
@@ -39,16 +43,31 @@ class HomeScreen extends StatelessWidget {
       child: InkWell(
         onTap: () => navigateTo(context, destination),
         child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18.0,
-            ),
-          ),
+          child: _getNavigationTileContent(title),
         ),
       ),
     );
+  }
+
+  Widget _getNavigationTileContent(String title) {
+    switch (title) {
+      case 'Net Worth':
+        return NetWorthChart();
+      case 'Budget':
+        return BudgetUsageBars();
+      case 'Transactions':
+        return TransactionsList();
+      case 'Financial Health':
+        return FinancialHealthScore();
+      default:
+        return Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18.0,
+          ),
+        );
+    }
   }
 
   void navigateTo(BuildContext context, Widget destination) {
